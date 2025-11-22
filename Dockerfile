@@ -47,11 +47,12 @@ COPY . .
 # coupling: see the (dirs ...) directive in the toplevel dune file for the list
 # of directories containing OCaml code and which should not be added below
 # Note: Remove pro-only languages (elixir, apex) that reference tree-sitter-lang-pro
-RUN rm -rf cli .github .circleci Dockerfile semgrep.opam \
-    languages/elixir languages/apex
-
-# we *do* need the cli's semgrep_interfaces folder, however
-COPY cli/src/semgrep/semgrep_interfaces cli/src/semgrep/semgrep_interfaces
+# Note: Keep cli/src/semgrep/semgrep_interfaces as interfaces/ symlinks to it
+RUN rm -rf .github .circleci Dockerfile semgrep.opam \
+    languages/elixir languages/apex && \
+    find cli -mindepth 1 -maxdepth 1 ! -name 'src' -exec rm -rf {} + && \
+    find cli/src -mindepth 1 -maxdepth 1 ! -name 'semgrep' -exec rm -rf {} + && \
+    find cli/src/semgrep -mindepth 1 -maxdepth 1 ! -name 'semgrep_interfaces' -exec rm -rf {} +
 
 ###############################################################################
 # Step1: build semgrep-core
