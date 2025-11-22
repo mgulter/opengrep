@@ -53,9 +53,19 @@ RUN rm -rf cli .github .circleci Dockerfile semgrep.opam \
 # we *do* need the cli's semgrep_interfaces folder, however
 COPY cli/src/semgrep/semgrep_interfaces cli/src/semgrep/semgrep_interfaces
 
-# Fix the broken symlink in interfaces/
+# Fix all broken symlinks that point to interfaces/semgrep_interfaces
+# The symlink chain is broken after we delete cli/, so we recreate all affected symlinks
 RUN rm -f interfaces/semgrep_interfaces && \
-    ln -s ../cli/src/semgrep/semgrep_interfaces interfaces/semgrep_interfaces
+    ln -s ../cli/src/semgrep/semgrep_interfaces interfaces/semgrep_interfaces && \
+    # Now fix all .atd symlinks that were broken by the cli deletion
+    rm -f libs/ast_generic/ast_generic_v1.atd && \
+    ln -s ../../cli/src/semgrep/semgrep_interfaces/ast_generic_v1.atd libs/ast_generic/ast_generic_v1.atd && \
+    rm -f src/rule/rule_schema_v2.atd && \
+    ln -s ../../cli/src/semgrep/semgrep_interfaces/rule_schema_v2.atd src/rule/rule_schema_v2.atd && \
+    rm -f src/rule/semgrep_output_v1.atd && \
+    ln -s ../../cli/src/semgrep/semgrep_interfaces/semgrep_output_v1.atd src/rule/semgrep_output_v1.atd && \
+    rm -f src/osemgrep/core/semgrep_metrics.atd && \
+    ln -s ../../../cli/src/semgrep/semgrep_interfaces/semgrep_metrics.atd src/osemgrep/core/semgrep_metrics.atd
 
 ###############################################################################
 # Step1: build semgrep-core
