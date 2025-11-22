@@ -327,10 +327,7 @@ ALPINE_APK_DEPS_CORE=\
   gmp-dev \
   libev-dev \
   openssl-dev \
-  zlib-dev \
-  libidn2-dev \
-  libunistring-dev \
-  libpsl-dev
+  zlib-dev
 
 # Here is why we need those external packages:
 # - pkg-config?

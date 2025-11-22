@@ -60,14 +60,12 @@ else
     case "$OS" in
     linux)
         if [[ -e /etc/alpine-release ]]; then
-            # The CCLIB flags statically (since we have CCOPT include -static)
-            # link in libcurl's dependencies.
-            # This can be removed when we transition away from the ocurl otel
-            # collector.
-            # old: was just '--copt -static --copy -no-pie' before we depended
-            # on libcurl
+            # Static linking on Alpine
+            # Note: libcurl dependencies (libidn2, libunistring, libpsl) are not
+            # available as static libraries in modern Alpine versions, so we link
+            # only the essential libraries that have static versions available.
             FLAGS=()
-            CCLIB=("-lidn2" "-lunistring" "-lpsl" "-lssl" "-lcrypto" "-lz")
+            CCLIB=()
             CCOPT=("-static" "-no-pie")
         else
             # On non-Alpine Linux distros (e.g., Ubuntu), we just dynamically
