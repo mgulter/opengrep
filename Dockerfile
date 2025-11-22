@@ -117,7 +117,7 @@ WORKDIR /src/semgrep
 # Just copy enough so that the `make install-xxx` below can work
 COPY --from=semgrep-core-files /src/semgrep/Makefile ./Makefile
 COPY --from=semgrep-core-files /src/semgrep/scripts ./scripts
-COPY --from=semgrep-core-files /src/semgrep/semgrep.opam ./semgrep.opam
+COPY --from=semgrep-core-files /src/semgrep/opam ./opam
 COPY --from=semgrep-core-files /src/semgrep/libs/ocaml-tree-sitter-core/tree-sitter.opam ./libs/ocaml-tree-sitter-core/tree-sitter.opam
 COPY --from=semgrep-core-files /src/semgrep/dev ./dev
 
