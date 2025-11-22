@@ -47,25 +47,13 @@ COPY . .
 # coupling: see the (dirs ...) directive in the toplevel dune file for the list
 # of directories containing OCaml code and which should not be added below
 # Note: Remove pro-only languages (elixir, apex) that reference tree-sitter-lang-pro
-RUN rm -rf cli .github .circleci Dockerfile semgrep.opam \
-    languages/elixir languages/apex
-
-# we *do* need the cli's semgrep_interfaces folder, however
-COPY cli/src/semgrep/semgrep_interfaces cli/src/semgrep/semgrep_interfaces
-
-# Fix all broken symlinks that point to interfaces/semgrep_interfaces
-# The symlink chain is broken after we delete cli/, so we recreate all affected symlinks
-RUN rm -f interfaces/semgrep_interfaces && \
-    ln -s ../cli/src/semgrep/semgrep_interfaces interfaces/semgrep_interfaces && \
-    # Now fix all .atd symlinks that were broken by the cli deletion
-    rm -f libs/ast_generic/ast_generic_v1.atd && \
-    ln -s ../../cli/src/semgrep/semgrep_interfaces/ast_generic_v1.atd libs/ast_generic/ast_generic_v1.atd && \
-    rm -f src/rule/rule_schema_v2.atd && \
-    ln -s ../../cli/src/semgrep/semgrep_interfaces/rule_schema_v2.atd src/rule/rule_schema_v2.atd && \
-    rm -f src/rule/semgrep_output_v1.atd && \
-    ln -s ../../cli/src/semgrep/semgrep_interfaces/semgrep_output_v1.atd src/rule/semgrep_output_v1.atd && \
-    rm -f src/osemgrep/core/semgrep_metrics.atd && \
-    ln -s ../../../cli/src/semgrep/semgrep_interfaces/semgrep_metrics.atd src/osemgrep/core/semgrep_metrics.atd
+# Note: Keep cli/src/semgrep/semgrep_interfaces as it's needed by symlinks
+RUN rm -rf .github .circleci Dockerfile semgrep.opam \
+    languages/elixir languages/apex && \
+    # Remove everything from cli except semgrep_interfaces
+    find cli -mindepth 1 -maxdepth 1 ! -name 'src' -delete && \
+    find cli/src -mindepth 1 -maxdepth 1 ! -name 'semgrep' -delete && \
+    find cli/src/semgrep -mindepth 1 -maxdepth 1 ! -name 'semgrep_interfaces' -delete
 
 ###############################################################################
 # Step1: build semgrep-core
