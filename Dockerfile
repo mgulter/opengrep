@@ -46,7 +46,7 @@ COPY . .
 # remove files and folders that aren't necessary for the semgrep-core build
 # coupling: see the (dirs ...) directive in the toplevel dune file for the list
 # of directories containing OCaml code and which should not be added below
-RUN rm -rf cli .github .circleci Dockerfile
+RUN rm -rf cli .github .circleci Dockerfile semgrep.opam
 
 # we *do* need the cli's semgrep_interfaces folder, however
 COPY cli/src/semgrep/semgrep_interfaces cli/src/semgrep/semgrep_interfaces
