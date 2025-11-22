@@ -323,14 +323,11 @@ install-deps: install-deps-for-semgrep-core
 ALPINE_APK_DEPS_CORE=\
   pkgconf \
   pcre-dev \
-  pcre-static \
   pcre2-dev \
-  pcre2-static \
   gmp-dev \
-  gmp-static \
   libev-dev \
-  openssl-libs-static \
-  zlib-static
+  openssl-dev \
+  zlib-dev
 
 # Here is why we need those external packages:
 # - pkg-config?
