@@ -125,6 +125,7 @@ COPY --from=semgrep-core-files /src/semgrep/dev ./dev
 # configures and builds ocaml-tree-sitter-core too; here we are
 # just concerned about installing external packages to maximize docker caching.
 RUN make install-deps-ALPINE-for-semgrep-core &&\
+    ./scripts/install-memprof-limits-dev.sh &&\
     make install-opam-deps
 
 # Compile (and minimal test) semgrep-core
