@@ -51,6 +51,7 @@ jobs:
             type=raw,value=${{ github.event.inputs.tag }},enable=${{ github.event_name == 'workflow_dispatch' }}
 
       - name: Build and push Docker image
+        id: build
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -63,4 +64,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
 
       - name: Image digest
-        run: echo ${{ steps.meta.outputs.tags }}
+        run: |
+          echo "Image pushed successfully!"
+          echo "Tags:"
+          echo "${{ steps.meta.outputs.tags }}" | tr ',' '\n'
+          echo "Digest: ${{ steps.build.outputs.digest }}"
